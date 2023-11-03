@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "aws-lightsail-guard"
+version = "0.1.0"
+description = ""
+authors = ["Lei Zhang <zhanglei@apache.org>"]
+readme = "README.md"
+packages = [{ include = "aws_lightsail_guard", from = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+python-dotenv = "^1.0.0"
+boto3 = "1.28.77"
+
+[tool.poetry.group.lint.dependencies]
+isort = "^5.12.0"
+black = { version = "^23.1a1", allow-prereleases = true }
+flake8 = "^6.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
