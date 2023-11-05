@@ -39,5 +39,18 @@ class Guard:
             )
             print(f"Attach public ip {attach_static_ip_response} success")
 
+        self.get_lightsail_instance_info(name)
+
+    def get_lightsail_instance_info(self, name):
+        instance = lightsail.get_instance(instanceName=name)['instance']
+        static_ips = lightsail.get_static_ips()['staticIps']
+        print(f"---------- {instance['name']} ----------")
+        print(f"name: {instance['name']}")
+        print(f"os: {instance['blueprintName']}")
+        print(f"public ip: {instance['publicIpAddress']}")
+        print(f"---------- static ips ----------")
+        for static_ip in static_ips:
+            print(f"{static_ip['name']}/{static_ip['ipAddress']}/{static_ip['attachedTo']}")
+
 
 guard = Guard()
