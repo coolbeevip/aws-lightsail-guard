@@ -19,5 +19,3 @@ if __name__ == '__main__':
     while True:
         schedule.run_pending()
         time.sleep(10)
-
-    # guard.lightsail_instance_public_ip_keepalive(name=os.environ['LIGHTSAIL_INSTANCE_NAME'])

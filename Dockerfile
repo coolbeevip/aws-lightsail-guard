@@ -25,4 +25,4 @@ COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 COPY --from=builder /app/src/ /app/src
 COPY --from=builder /app/main.py /app/main.py
 
-ENTRYPOINT ["python", "-m", "main.py"]
+ENTRYPOINT ["python", "main.py"]
