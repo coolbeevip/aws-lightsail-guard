@@ -12,8 +12,6 @@ WORKDIR /app
 COPY pyproject.toml poetry.lock ./
 COPY src/ ./src
 COPY main.py ./
-RUN touch README.md
-
 RUN poetry install
 
 FROM python:3.10-slim-buster as runtime
@@ -24,5 +22,7 @@ ENV VIRTUAL_ENV=/app/.venv \
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 COPY --from=builder /app/src/ /app/src
 COPY --from=builder /app/main.py /app/main.py
+
+WORKDIR /app
 
 ENTRYPOINT ["python", "main.py"]
