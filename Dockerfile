@@ -10,6 +10,8 @@ ENV POETRY_NO_INTERACTION=1 \
 WORKDIR /app
 
 COPY pyproject.toml poetry.lock ./
+COPY src/ ./src
+COPY main.py ./
 RUN touch README.md
 
 RUN poetry install
@@ -20,8 +22,7 @@ ENV VIRTUAL_ENV=/app/.venv \
     PATH="/app/.venv/bin:$PATH"
 
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
-
-COPY src/ ./src
-COPY main.py ./
+COPY --from=builder /app/src/ /app/src
+COPY --from=builder /app/main.py /app/main.py
 
 ENTRYPOINT ["python", "-m", "main.py"]
