@@ -10,6 +10,7 @@ packages = [{ include = "aws_lightsail_guard", from = "src" }]
 python = "^3.10"
 python-dotenv = "^1.0.0"
 boto3 = "1.28.77"
+termcolor = "2.3.0"
 
 [tool.poetry.group.lint.dependencies]
 isort = "^5.12.0"
