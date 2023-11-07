@@ -21,7 +21,7 @@ ENV VIRTUAL_ENV=/app/.venv \
     PATH="/app/.venv/bin:$PATH"
 
 WORKDIR /app
-
+RUN mkdir -p /app/logs
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 COPY --from=builder /app/src/ /app/src
 COPY --from=builder /app/main.py /app/main.py
