@@ -1,4 +1,5 @@
 import logging
+import os
 from datetime import datetime
 
 from aws_lightsail_guard.lightsail import lightsail, lightsail_domain
@@ -46,7 +47,7 @@ class Guard:
             get_domains_response = lightsail_domain.get_domains()
             for domain in get_domains_response['domains']:
                 for domainEntry in domain['domainEntries']:
-                    if domainEntry['target'] == 't5.coolbeevip.com':
+                    if domainEntry['name'] == os.environ['DOMAIN_ENTRY_NAME']:
                         lightsail_domain.update_domain_entry(
                             domainName=domain['name'],
                             domainEntry={
