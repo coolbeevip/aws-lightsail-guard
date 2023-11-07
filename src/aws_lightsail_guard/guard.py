@@ -9,6 +9,7 @@ class Guard:
 
     def lightsail_instance_public_ip_keepalive(self, name):
         instance = lightsail.get_instance(instanceName=name)['instance']
+        # TODO 此处应该检查域名
         if check_address(instance['publicIpAddress'], 443):
             logging.info(
                 f"Instance {instance['name']} public static ip {instance['publicIpAddress']} OK")
@@ -20,19 +21,17 @@ class Guard:
             allocate_static_ip_response = lightsail.allocate_static_ip(
                 staticIpName=new_static_ip_name
             )
-            new_static_ip = allocate_static_ip_response['staticIp']['ipAddress']
             logging.debug(f"Allocate public ip {allocate_static_ip_response} success")
 
-            # Release old static ip
-            released_old_static_ip = None
+            # Release others static ip
             for static_ip in lightsail.get_static_ips()['staticIps']:
-                if static_ip['ipAddress'] == instance['publicIpAddress']:
+                if static_ip['name'] == new_static_ip_name:
+                    new_static_ip = static_ip['ipAddress']
+                else:
                     try:
                         release_static_ip_response = lightsail.release_static_ip(
                             staticIpName=static_ip['name'])
                         logging.info(f"Release public ip {release_static_ip_response} success")
-                        released_old_static_ip = static_ip['ipAddress']
-                        break
                     except Exception as e:
                         logging.info(f"Release public ip {release_static_ip_response} fails")
 
@@ -47,7 +46,7 @@ class Guard:
             get_domains_response = lightsail_domain.get_domains()
             for domain in get_domains_response['domains']:
                 for domainEntry in domain['domainEntries']:
-                    if domainEntry['target'] == released_old_static_ip:
+                    if domainEntry['target'] == 't5.coolbeevip.com':
                         lightsail_domain.update_domain_entry(
                             domainName=domain['name'],
                             domainEntry={
