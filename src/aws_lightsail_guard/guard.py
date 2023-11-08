@@ -32,9 +32,9 @@ class Guard:
                     try:
                         release_static_ip_response = lightsail.release_static_ip(
                             staticIpName=static_ip['name'])
-                        logging.info(f"Release public ip {release_static_ip_response} success")
+                        logging.debug(f"Release public ip {release_static_ip_response} success")
                     except Exception as e:
-                        logging.info(f"Release public ip {release_static_ip_response} fails")
+                        logging.error(f"Release public ip {release_static_ip_response} fails")
 
             # Attach new static ip to instance
             attach_static_ip_response = lightsail.attach_static_ip(
