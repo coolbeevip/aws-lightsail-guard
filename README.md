@@ -1,4 +1,4 @@
-# Amazon Lightsail instance public network IP inspection 
+# Amazon Lightsail instance public static IP inspection 
 
 ## Introduction
 
