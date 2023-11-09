@@ -7,7 +7,20 @@
 
 🔍 This application consistently conducts active surveillance on the specified port of the instance. 🚫If access is obstructed, it will renew the static IP of the instance ⚡ and update the domain name record 🔄.
 
-## Environment
+## Quick Start
+
+```shell
+docker run -d --rm --name guard \
+-e AWS_ACCESS_KEY_ID=<your aws access key id> \
+-e AWS_SECRET_ACCESS_KEY=<your aws secret access key> \
+-e REGION_NAME=<region of instance> \
+-e LIGHTSAIL_INSTANCE_NAME=<instance name> \
+-e DOMAIN_ENTRY_NAME=<your domain> \
+-e LIGHTSAIL_INSTANCE_PORT=<port for inspection> \
+coolbeevip/aws-lightsail-guard
+```
+
+## Dev Environment
 
 Create .env file in the root directory of the project, and add the following content:
 
@@ -20,11 +33,12 @@ LIGHTSAIL_INSTANCE_PORT=<port for inspection>
 DOMAIN_ENTRY_NAME=<your domain>
 ```
 
-## Usage
+Run the following command to start the application:
 
 ```bash
 python main.py
 ```
 
 # Reference
+
 * https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/lightsail.html
