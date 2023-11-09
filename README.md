@@ -1,5 +1,7 @@
 # Amazon Lightsail instance public network IP inspection 
 
+## Introduction
+
 * 🚀 Initialize an Amazon Lightsail instance. 
 * 😎 Procure a static IP and link it with the corresponding instance. 
 * 🎯 Register a distinct domain name and delegate subdomains to direct traffic towards your Lightsail assets. 
@@ -15,8 +17,8 @@ docker run -d --rm --name guard \
 -e AWS_SECRET_ACCESS_KEY=<your aws secret access key> \
 -e REGION_NAME=<region of instance> \
 -e LIGHTSAIL_INSTANCE_NAME=<instance name> \
--e DOMAIN_ENTRY_NAME=<your domain> \
 -e LIGHTSAIL_INSTANCE_PORT=<port for inspection> \
+-e DOMAIN_ENTRY_NAME=<your domain> \
 coolbeevip/aws-lightsail-guard
 ```
 
