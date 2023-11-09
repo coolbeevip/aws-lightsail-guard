@@ -11,7 +11,7 @@ def job_wrapper():
 
 
 if __name__ == '__main__':
-    schedule.every(5).minutes.do(job_wrapper)
+    schedule.every(1).minutes.do(job_wrapper)
 
     while True:
         schedule.run_pending()

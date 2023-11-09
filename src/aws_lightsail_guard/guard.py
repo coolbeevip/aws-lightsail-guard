@@ -11,7 +11,7 @@ class Guard:
     def lightsail_instance_public_ip_keepalive(self, name):
         instance = lightsail.get_instance(instanceName=name)['instance']
         # TODO 此处应该检查域名
-        if check_address(instance['publicIpAddress'], 443):
+        if check_address(instance['publicIpAddress'], int(os.environ['LIGHTSAIL_INSTANCE_PORT'])):
             logging.info(
                 f"Instance {instance['name']} public static ip {instance['publicIpAddress']} OK")
         else:
