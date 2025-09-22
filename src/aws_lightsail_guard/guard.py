@@ -15,6 +15,7 @@
 import logging
 import os
 from datetime import datetime
+from typing import List
 
 from aws_lightsail_guard.lightsail import lightsail, lightsail_domain
 from aws_lightsail_guard.utils import check_address
@@ -22,6 +23,7 @@ from aws_lightsail_guard.utils import check_address
 
 class Guard:
     def lightsail_instance_public_ip_keepalive(self, name):
+        exist_domains: List[str] = os.environ["DOMAIN_ENTRY_NAME"].split(",")
         instance = lightsail.get_instance(instanceName=name)["instance"]
         # TODO 此处应该检查域名
         if check_address(
@@ -67,9 +69,10 @@ class Guard:
 
             # Update domain entry to new static ip
             get_domains_response = lightsail_domain.get_domains()
+
             for domain in get_domains_response["domains"]:
                 for domainEntry in domain["domainEntries"]:
-                    if domainEntry["name"] == os.environ["DOMAIN_ENTRY_NAME"]:
+                    if domainEntry["name"] in exist_domains:
                         lightsail_domain.update_domain_entry(
                             domainName=domain["name"],
                             domainEntry={
