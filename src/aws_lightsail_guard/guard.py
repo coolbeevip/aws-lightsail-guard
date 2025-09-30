@@ -25,17 +25,23 @@ class Guard:
         exist_domains: List[str] = os.environ["DOMAIN_ENTRY_NAME"].split(",")
         max_retries = 3
         for attempt in range(max_retries):
+            logging.info(f"Getting instance for {name}")
             instance = lightsail.get_instance(instanceName=name)["instance"]
-            # TODO 此处应该检查域名
+            old_static_ip = instance["publicIpAddress"]
             if check_address(
                 instance["publicIpAddress"], int(os.environ["LIGHTSAIL_INSTANCE_PORT"])
             ):
                 logging.info(
                     f"Instance {instance['name']} public static ip {instance['publicIpAddress']} OK"
                 )
+                get_domains_response = lightsail_domain.get_domains()
+                for domain in get_domains_response["domains"]:
+                    for entry in domain['domainEntries']:
+                        if entry["type"] == 'A' and entry["target"] == instance["publicIpAddress"]:
+                            logging.info(f"Domain {entry['name']} public ip {entry['target']} OK")
                 return True
             else:
-                logging.debug(
+                logging.info(
                     f"Instance {instance['name']} public static ip {instance['publicIpAddress']} ERROR"
                 )
                 # Allocate new static ip
@@ -45,7 +51,7 @@ class Guard:
                     staticIpName=new_static_ip_name
                 )
                 logging.debug(f"Allocate public ip {allocate_static_ip_response} success")
-                # Release others static ip
+                # Release others static ip for your memory
                 for static_ip in lightsail.get_static_ips()["staticIps"]:
                     if static_ip["name"] == new_static_ip_name:
                         new_static_ip = static_ip["ipAddress"]
@@ -69,25 +75,22 @@ class Guard:
                 # Update domain entry to new static ip
                 get_domains_response = lightsail_domain.get_domains()
                 for domain in get_domains_response["domains"]:
-                    for domainEntry in domain["domainEntries"]:
-                        if domainEntry["name"] in exist_domains:
+                    for entry in domain["domainEntries"]:
+                        if entry["type"] == "A" and entry["target"] == old_static_ip:
+                            new_entry = entry.copy()
+                            new_entry['target'] = new_static_ip
                             lightsail_domain.update_domain_entry(
                                 domainName=domain["name"],
-                                domainEntry={
-                                    "id": domainEntry["id"],
-                                    "name": domainEntry["name"],
-                                    "target": new_static_ip,
-                                    "type": domainEntry["type"],
-                                },
+                                domainEntry=new_entry,
                             )
                             logging.debug(
-                                f"Update domain entry {domainEntry['name']} to {new_static_ip} success"
+                                f"Update domain entry {entry['name']} to {new_static_ip} success"
                             )
                 logging.info(
                     f"Instance {instance['name']} public static ip {new_static_ip} RENEWED"
                 )
                 self.get_lightsail_instance_info(name)
-        # 如果3次都失败
+        # If all 3 attempts fail
         logging.error(f"Instance {name} public static ip keepalive failed after {max_retries} attempts.")
         return False
 

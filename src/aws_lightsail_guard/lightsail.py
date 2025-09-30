@@ -25,7 +25,7 @@ lightsail = boto3.client(
 
 lightsail_domain = boto3.client(
     "lightsail",
-    region_name="us-east-1",
+    region_name="us-east-1", # Domain-related APIs are only available in the us-east-1 Region.
     aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
     aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
 )

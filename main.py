@@ -61,6 +61,7 @@ def job_wrapper():
 
 
 if __name__ == '__main__':
+    job_wrapper()
     schedule.every(5).minutes.do(job_wrapper)
 
     while True:
